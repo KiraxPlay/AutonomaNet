@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   //conectando a la BD
-  const user = 'juanbobadillaa';
-  const password = 'root';
-  const uri = `mongodb+srv://${user}:${password}@cluster0.igaz4.mongodb.net/`;
+  const user = 'usuario_mongoatlas';
+  const password = 'contraseña_mongoAtlas';
+  const uri = `mongodb+srv://${user}:${password}@tucluster.partedelcluster.mongodb.net/`;
   try {
     await mongoose.connect(uri);
     console.log("Conexion exitosa");
