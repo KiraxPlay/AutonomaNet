@@ -12,11 +12,34 @@ export const useAuth = () => {
     }
     return context;
 }
-
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Verificar el token al cargar la página
+    useEffect(() => {
+        async function checkLogin() {
+            const token = localStorage.getItem("token")
+
+            if (token) {
+                try {
+                    const res = await verifyTokenRequest()
+                    if (res.data) {
+                        setUser(res.data)
+                        setIsAuthenticated(true)
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+            }
+            setLoading(false)
+        }
+        checkLogin()
+    }, [])
+
+
 
     const signup = async (user) => {
         try {
@@ -32,6 +55,8 @@ export const AuthProvider = ({ children }) => {
     const sigin = async (user) => {
         try {
             const res = await loginRequest(user);
+            localStorage.setItem("token", res.data.token); // Guardar el token en localStorage
+            setUser(res.data.user); // Guardar el usuario en el estado
             setIsAuthenticated(true);
             console.log(res);
         } catch (error) {
@@ -39,10 +64,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () =>{
-        setUser(null);
-        setIsAuthenticated(false);
-        navigate("/");
+    const logout = () => {
+        localStorage.removeItem("token")
+        setUser(null)
+        setIsAuthenticated(false)
     }
 
     useEffect(() => {
@@ -53,7 +78,7 @@ export const AuthProvider = ({ children }) => {
             }, 5000)
             return () => clearTimeout(timer);
         }
-    } , [errors])
+    }, [errors])
     return (
         <AuthContext.Provider
             value={{
@@ -63,6 +88,7 @@ export const AuthProvider = ({ children }) => {
                 user,
                 isAuthenticated,
                 errors,
+                loading
             }}
         >
             {children}

@@ -15,11 +15,12 @@ function LoginPage() {
     const onSubmit = handleSubmit((data) => {
         try {
             sigin(data);
-            navigate('/profile'); // Redirigir a la página de perfil después de iniciar sesión
+            navigate('/home'); // Redirigir a la página de perfil después de iniciar sesión
         } catch (error) {
             console.error("Error al iniciar sesión:", error);
         }
     });
+    
     useEffect(() => {
         document.title = "Inicio de Sesión";
     }, []);
