@@ -4,7 +4,7 @@ import Task from "../models/task.model.js";
 export const getTasks = async (req, res) => {
   try {
     // Obtener todas las tareas y poblar el campo "user" con los datos del usuario
-    const tasks = await Task.find().populate("user", "username email"); // Solo incluye `username` y `email`
+    const tasks = await Task.find().populate("user", "username email profilePicture"); // Solo incluye `username` y `email`
     res.json(tasks);
   } catch (error) {
     console.error("Error al obtener las tareas:", error);

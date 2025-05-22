@@ -40,10 +40,23 @@ function PostList() {
                 className="w-full h-64 object-cover rounded-md mb-4"
               />
             )}
+
             <p className="text-gray-800">{post.text}</p>
-            <p className="text-gray-600 text-sm">
-              Publicado por: {post.user?.username || "Usuario desconocido"}
-            </p>
+
+            <div className="flex items-center space-x-2 text-gray-600 text-sm mt-2">
+              {post.user?.profilePicture ? (
+                <img
+                  src={`http://localhost:4000/uploads/profile/${post.user.profilePicture}`}
+                  alt={`${post.user.username}'s profile`}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600">
+                  ?
+                </div>
+              )}
+              <span>Publicado por: {post.user?.username || "Usuario desconocido"}</span>
+            </div>
           </div>
         ))
       ) : (

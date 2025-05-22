@@ -9,21 +9,24 @@ function RegisterPage() {
     const {
         register,
         handleSubmit,
-        formState: {
-            errors
-        } } = useForm();
-    const [showPassword, setShowPassword] = useState(false); // 👈 estado para mostrar/ocultar
-    const { signup, isAuthenticated, errors: AuthErrors } = useAuth(); // 👈 hook de contexto para el registro
-    const navigation = useNavigate();
+        formState: { errors }
+    } = useForm();
+
+    const [showPassword, setShowPassword] = useState(false);
+    const { signup, errors: AuthErrors } = useAuth(); // El hook auth
+    const navigate = useNavigate();
 
     const onSubmit = handleSubmit(async (values) => {
-        signup(values); // 👈 llamar a la función de registro
+        const success = await signup(values);
+        if (success) {
+            // Si se registra correctamente, redirige a login
+            navigate('/login');
+        }
     });
 
     useEffect(() => {
         document.title = "Registro";
-        if (isAuthenticated) navigation('/login')
-    }, [isAuthenticated]);
+    }, []);
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-200">
@@ -34,43 +37,46 @@ function RegisterPage() {
                 <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
                     Registrarse
                 </h2>
-                {
-                    AuthErrors?.map((error, i) => (
-                        <div className="bg-red-600 p-4 text-white" key={i}>
-                            {error}
-                        </div>
-                    ))
-                }
+
+                {/* Mostrar errores si los hay */}
+                {AuthErrors?.length > 0 && AuthErrors.map((error, i) => (
+                    <div className="bg-red-600 p-4 text-white mb-2" key={i}>
+                        {error}
+                    </div>
+                ))}
+
                 <form onSubmit={onSubmit} className="space-y-4">
+                    {/* Campos de formulario ... */}
                     <div>
                         <label className="block text-sm font-medium text-gray-600 mb-1">Correo electrónico</label>
                         <input
                             type="email"
-                            {...register("email", { required: true })}
+                            {...register("email", { required: "El correo es obligatorio" })}
                             className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="correo electrónico"
                         />
+                        {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
                     </div>
-
-                    {errors.email && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
 
                     <div>
                         <label className="block text-sm font-medium text-gray-600 mb-1">Usuario</label>
                         <input
                             type="text"
-                            {...register("username", { required: true })}
+                            {...register("username", { required: "El usuario es obligatorio" })}
                             className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Tu nombre de usuario"
                         />
+                        {errors.username && <span className="text-red-500 text-sm">{errors.username.message}</span>}
                     </div>
-
-                    {errors.username && <span className="text-red-500 text-sm">Este campo es obligatorio</span>}
 
                     <div className="relative">
                         <label className="block text-sm font-medium text-gray-600 mb-1">Contraseña</label>
                         <input
-                            type={showPassword ? "text" : "password"} // 👈 toggle aquí
-                            {...register("password", { required: true })}
+                            type={showPassword ? "text" : "password"}
+                            {...register("password", {
+                                required: "La contraseña es obligatoria",
+                                maxLength: { value: 6, message: "Máximo 6 caracteres" }
+                            })}
                             className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="**********"
                         />
@@ -81,19 +87,20 @@ function RegisterPage() {
                         >
                             {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                         </button>
-                         {errors.password && <span className="text-red-500 text-sm">es requerida la contraseña y tiene que tener maximo de 6 caracteres</span>}
-                        <div className="relative">
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Confirmar Contraseña</label>
-                            <input
-                                type={showPassword ? "text" : "password"} // 👈 toggle aquí
-                                {...register("confiPassword", { required: true })}
-                                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="**********"
-                            />
-                            
-                             {errors.password && <span className="text-red-500 text-sm">confirma la contraseña</span>}
-                        </div>
+                        {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
                     </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Confirmar Contraseña</label>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            {...register("confiPassword", { required: "Confirma la contraseña" })}
+                            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="**********"
+                        />
+                        {errors.confiPassword && <span className="text-red-500 text-sm">{errors.confiPassword.message}</span>}
+                    </div>
+
                     <button
                         type="submit"
                         className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"

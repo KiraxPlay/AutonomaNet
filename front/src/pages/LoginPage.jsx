@@ -12,15 +12,17 @@ function LoginPage() {
     const { sigin, errors: sigInErrors } = useAuth(); // 👈 hook de contexto para el inicio de sesión
     const navigate = useNavigate();
 
-    const onSubmit = handleSubmit((data) => {
+    const onSubmit = handleSubmit(async (data) => {
         try {
-            sigin(data);
-            navigate('/home'); // Redirigir a la página de perfil después de iniciar sesión
+            const success = await sigin(data);
+            if (success) {
+                navigate('/home');
+            }
         } catch (error) {
             console.error("Error al iniciar sesión:", error);
         }
     });
-    
+
     useEffect(() => {
         document.title = "Inicio de Sesión";
     }, []);

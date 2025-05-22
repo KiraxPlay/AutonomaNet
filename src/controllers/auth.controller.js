@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { createAccesToken } from "../libs/jwt.js";
+import { createAccesToken , verifyToken  } from "../libs/jwt.js";
 
 export const register = async (req, res) => {
   const { email, username, password } = req.body; //el requ.body es lo que el usuario va a enviar en el formulario
@@ -81,4 +81,26 @@ export const profile = async (req, res) => {
   });
   console.log(req.user); //imprimiendo el usuario en la consola
   res.send("profile");
+};
+
+export const verifytoken = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "No token provided" });
+
+    const decoded = await verifyToken(token); // 👈 aquí usas tu helper
+
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.json({
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      createdAt: user.createdAt,
+    });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
 };

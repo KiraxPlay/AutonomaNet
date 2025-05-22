@@ -14,6 +14,8 @@ export const registerSchema = z.object({//validacion de usuario
         required_error: 'La contraseña es requerida'
     }).min(6, {
         message: 'La contraseña debe tener al menos 6 caracteres'
+    }).max(15, {
+        message: 'La contraseña no puede tener mas de 15 caracteres'
     }),
 });
 
