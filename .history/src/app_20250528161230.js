@@ -6,7 +6,6 @@ import cors from 'cors';
 import taskRoutes from './routes/task.routes.js';
 import profileRoutes from './routes/profile.routes.js';
 import friendsRoutes from './routes/friends.routes.js';
-import commentRoutes from './routes/coment.routes.js';
 import path from 'path'; // Añadir esta línea al principio del archivo
 
 

@@ -6,7 +6,6 @@ import cors from 'cors';
 import taskRoutes from './routes/task.routes.js';
 import profileRoutes from './routes/profile.routes.js';
 import friendsRoutes from './routes/friends.routes.js';
-import commentRoutes from './routes/coment.routes.js';
 import path from 'path'; // Añadir esta línea al principio del archivo
 
 
@@ -28,7 +27,6 @@ app.use(cookieParser());//para poder leer las cookies
 app.use('/api',authRoutes);
 app.use('/api',taskRoutes);
 app.use('/api', profileRoutes);
-app.use('/api/comments',commentRoutes);
 app.use('/api/friends', friendsRoutes)
 
 export default app;

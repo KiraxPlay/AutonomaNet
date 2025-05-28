@@ -35,7 +35,7 @@ function ProfileSidebar() {
     formData.append('profilePicture', selectedFile);
 
     try {
-      const res = await fetch(`${API}/profile/photo`, {
+      const res = await fetch(${API}/profile/photo, {
         method: 'PUT',
         credentials: 'include',
         body: formData,
@@ -63,7 +63,7 @@ function ProfileSidebar() {
     if (!window.confirm('¿Quieres eliminar tu foto de perfil?')) return;
     setLoading(true);
     try {
-      const res = await fetch(`${API}/profile/photo`, {
+      const res = await fetch(${API}/profile/photo, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -99,20 +99,12 @@ function ProfileSidebar() {
             <img src={preview} alt="Vista previa" className="object-cover w-full h-full" />
           ) : user?.profilePicture ? (
             <img
-              src={`http://localhost:4000/uploads/profile/${user.profilePicture}`}
+              src={http://localhost:4000/uploads/profile/${user.profilePicture}}
               alt="Foto de perfil"
               className="object-cover w-full h-full"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/default-avatar.png";
-              }}
             />
           ) : (
-            <img
-              src="/default-avatar.png"
-              alt="Avatar por defecto"
-              className="object-cover w-full h-full"
-            />
+            <span className="text-gray-600">Sin foto</span>
           )}
         </div>
 
