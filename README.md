@@ -1,3 +1,3 @@
 # AutonomaNet
 
-Todo el proyecto esta en la rama master ya que desde el repo local no me deja subir ningun archivo a la rama main del repo remoto 
+la entrega esta en la rama entrega , no se pudo subir a la rama main y tampoco a la rama master
